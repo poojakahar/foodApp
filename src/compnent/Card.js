@@ -9,13 +9,4 @@ const Card=(props)=>{
     );
 };
 
-const styles={
-    cardStyle:{
-        borderColor: '#fdfdfd',
-        borderRadius: 2,
-        flexDirection: 'row',
-        borderWidth: 2,
-    }
-};
-
 export default Card;

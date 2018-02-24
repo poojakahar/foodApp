@@ -1,52 +1,73 @@
 import React, {Component} from 'react';
-import {Text, View, ImageBackground,Image,Alert,TouchableOpacity,Linking} from 'react-native';
+import {Text, View, ImageBackground,Image,Alert,TouchableOpacity,Linking, WebView,AsyncStorage} from 'react-native';
 import Card from "../Card";
 import CardSection from "../CardSection";
 import Button from "../Button";
 import Input from "../Input";
 import styles from './../../styles/styles';
+import {UserSignIn} from "../../Actions/UserAction";
+import {connect} from 'react-redux'
+import {NavigationActions} from 'react-navigation'
 
 class loginComp extends Component{
 
     static navigationOptions={
-        title: 'Sarika Restaurant'
+        title: 'Sarika Restaurant',
+        headerLeft:null
     };
 
     constructor(props){
         super(props);
 
         this.state={
-            username: '',
-            password: ''
+            username: 'pooja',
+            password: 'pooja123'
         }
+    }
+
+    onGooglePress()
+    {
+        Linking.openURL('http://localhost:3000/auth/google');
+        //return (<WebView source={{uri:'http://localhost:3000/auth/google'}} style={{flex:1}}/>)
+    }
+
+    onGithubPress()
+    {
+        Linking.openURL('http://localhost:3000/auth/github');
     }
 
     onButtonPress()
     {
-        fetch('http://localhost:3000/signIn',{
-            method: 'POST',
-            headers:{
-                'Accept':'application/json',
-                'Content-Type':'application/json'
-            },
-            body: JSON.stringify({
-                username: this.state.username,
-                password: this.state.password
-            })
-        }).then((response)=>response.json()).then((responseJson)=>{
-            var res = JSON.stringify(responseJson);
-            var orgres=JSON.stringify('1');
-
-            if(res==orgres)
-            {
-                const {navigate}=this.props.navigation;
-                navigate('Home');
-            }
-        }).catch((err)=>{
-            alert(err);
+        this.props.UserSignIn({
+            username: this.state.username,
+            password: this.state.password
         });
     }
 
+
+    componentWillReceiveProps(nextProps)
+    {
+        var res=nextProps.status;
+
+        console.log("Status: " + res);
+
+        if(res==200)
+        {
+            //debugger
+            this.props.navigation.dispatch(NavigationActions.reset({
+                index:0,
+                actions:[
+                    NavigationActions.navigate({
+                        routeName: 'Home'
+                    })
+                ]
+            }))
+        }
+        else
+        {
+            alert('Wrong Username or Password')
+        }
+    }
 
     render(){
         const { navigate }=this.props.navigation;
@@ -54,44 +75,40 @@ class loginComp extends Component{
         return(
             <View>
                 <ImageBackground source={require('./../../images/back1.jpg')} style={styles.imageBackStyle}>
-                    <Card style={styles.cardStyle}>
+                    <Card style={styles.loginCardStyle}>
                         <CardSection>
-                            <Text style={styles.titleStyle}> Sign In </Text>
+                            <Text style={styles.loginTitleStyle}> Sign In </Text>
                         </CardSection>
 
-                        <CardSection style={styles.cardSectionStyle}>
-                            <Input placeholder='Username' title='Username' onChangeText={username=>this.setState({username})} value={this.state.username} textInputStyle={styles.textInputStyle} textInputContainerStyle={styles.textInputContainerStyle} inputTitleStyle={styles.inputTitleStyle}/>
+                        <CardSection style={styles.loginCardSectionStyle}>
+                            <Input placeholder='Username' title='Username' onChangeText={username=>this.setState({username})} value={this.state.username} textInputStyle={styles.loginTextInputStyle} textInputContainerStyle={styles.loginTextInputContainerStyle} inputTitleStyle={styles.loginInputTitleStyle}/>
                         </CardSection>
 
-                        <CardSection style={styles.cardSectionStyle}>
-                            <Input placeholder='Password' title='Password' onChangeText={password=>this.setState({password})} value={this.state.password} textInputStyle={styles.textInputStyle} textInputContainerStyle={styles.textInputContainerStyle} inputTitleStyle={styles.inputTitleStyle} secureTextEntry/>
+                        <CardSection style={styles.loginCardSectionStyle}>
+                            <Input placeholder='Password' title='Password' onChangeText={password=>this.setState({password})} value={this.state.password} textInputStyle={styles.loginTextInputStyle} textInputContainerStyle={styles.loginTextInputContainerStyle} inputTitleStyle={styles.loginInputTitleStyle} secureTextEntry/>
                         </CardSection>
 
-                        <CardSection style={styles.cardSectionStyle}>
-                            <Button title={'Sign In'} buttonContainerStyle={styles.buttonContainerStyle} buttonStyle={styles.buttonStyle} onPress={this.onButtonPress.bind(this)}/>
+                        <CardSection style={styles.loginCardSectionStyle}>
+                            <Button title={'Sign In'} buttonContainerStyle={styles.loginButtonContainerStyle} buttonStyle={styles.loginButtonStyle} onPress={this.onButtonPress.bind(this)}/>
                         </CardSection>
 
-                        <CardSection style={styles.signUpCardSection}>
-                            <Button title={'Sign Up'} buttonStyle={styles.buttonStyle} buttonContainerStyle={styles.signUpContainerStyle} onPress={()=>navigate('SignUp')}/>
+                        <CardSection style={styles.loginSignUpCardSection}>
+                            <Button title={'Sign Up'} buttonStyle={styles.loginButtonStyle} buttonContainerStyle={styles.loginSignUpContainerStyle} onPress={()=>navigate('SignUp')}/>
                         </CardSection>
                     </Card>
 
-                    <Card style={[styles.cardStyle,styles.loginContainerStyle]}>
+                    <Card style={[styles.loginCardStyle,styles.loginOptContainerStyle]}>
+                                <Image source={require('./../../images/facebook-32.png')} resizeMode={'contain'} style={styles.loginOptImgStyle}/>
 
-                            <CardSection>
-                                <Image source={require('./../../images/facebook-32.png')}/>
-                            </CardSection>
-                            <CardSection>
-                                <TouchableOpacity onPress={()=>{Linking.openURL('http://localhost:3000/auth/google')}}>
-                                    <Image source={require('./../../images/google-plus-32.png')}/>
+                                <TouchableOpacity onPress={()=>this.onGooglePress()}>
+                                    <Image source={require('./../../images/google-plus-32.png')} resizeMode={'contain'} style={styles.loginOptImgStyle}/>
                                 </TouchableOpacity>
-                            </CardSection>
-                            <CardSection>
-                                <Image source={require('./../../images/twitter-32.png')}/>
-                            </CardSection>
-                            <CardSection>
-                                <Image source={require('./../../images/github-32.png')}/>
-                            </CardSection>
+
+                                <Image source={require('./../../images/twitter-32.png')} resizeMode={'contain'} style={styles.loginOptImgStyle}/>
+
+                                <TouchableOpacity onPress={()=>this.onGithubPress()}>
+                                    <Image source={require('./../../images/github-32.png')} resizeMode={'contain'} style={styles.loginOptImgStyle}/>
+                                </TouchableOpacity>
                         </Card>
                 </ImageBackground>
             </View>
@@ -99,94 +116,14 @@ class loginComp extends Component{
     }
 }
 
-/*const styles={
-    imageBackStyle:{
-        height:'100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'stretch'
-    },
-
-    cardStyle:{
-        borderRadius: 20,
-        shadowColor: '#8B4513',
-        shadowOffset:{width: 0,height: 2},
-        shadowOpacity: 0.7,
-        paddingTop: 10,
-        paddingBottom: 10,
-        margin: 5,
-        width: '80%',
-        opacity: 0.7,
-        backgroundColor: '#fff8dc'
-    },
-
-    cardSectionStyle:{
-        padding: 10
-    },
-
-    buttonContainerStyle:{
-        borderColor: '#8B4513',
-        borderWidth: 2,
-        borderRadius: 10,
-        elevation: 1,
-        marginTop: 10,
-    },
-
-    buttonStyle:{
-        color: '#8B4513',
-        fontSize: 18,
-        fontWeight: '900',
-        alignSelf: 'center',
-        marginTop: 5,
-        marginBottom: 5
-    },
-
-    titleStyle:{
-        fontSize: 30,
-        fontWeight: '700',
-        alignSelf: 'center',
-        color: '#8B4513'
-    },
-
-    textInputStyle:{
-        fontSize: 18,
-        color: '#8B4513',
-        paddingRight: 5,
-        paddingLeft: 5,
-        marginTop: 5,
-        marginBottom: 5,
-        borderBottomColor: '#8B4513',
-        borderBottomWidth: 2,
-        width: '60%',
-        height: '90%'
-    },
-
-    textInputContainerStyle:{
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        height: 50,
-        flexDirection: 'row'
-        //justifyContent:'flex-start'
-    },
-
-    inputTitleStyle:{
-        fontSize: 18,
-        fontWeight: '700',
-        color: '#8B4513',
-        paddingRight: 5,
-        paddingLeft: 5,
-        marginTop: 5,
-        marginBottom: 5
-    },
-
-    loginContianerStyle:{
-        justifyContent:'space-around',
-        flexDirection: 'row'
-    },
-
-    loginImageStyle:{
-        height: '30%'
+const mapStateToProps=state=>{
+    //debugger
+    //debugger
+    return{
+        status:state.User.status
     }
-};*/
+}
 
-export default loginComp;
+export default connect(mapStateToProps,{
+    UserSignIn
+})(loginComp);

@@ -1,85 +1,128 @@
 import React , {Component} from 'react';
-import {Text,View,Alert,ActivityIndicator} from 'react-native';
+import {ScrollView,Text,View,Alert,ActivityIndicator,TouchableOpacity,Image,ImageBackground,TouchableHighlight} from 'react-native';
 import axios from 'axios';
 import Card from "./Card";
 import CardSection from "./CardSection";
 import MenuComp from './MenuComp'
+import styles from './../styles/styles'
+import CategoryAction from '../Actions/CategoryAction'
+import {connect} from 'react-redux'
 
 class Menu extends Component
 {
+    static navigationOptions=({navigation})=>({
+        title: 'Menu',
+        headerLeft: <View style={styles.menuButtonStyle}>
+            <TouchableOpacity onPress={()=>navigation.navigate("DrawerOpen")}>
+                <Image source={require('./../images/menu.png')}/>
+            </TouchableOpacity>
+        </View>
+    })
+
     constructor(props)
     {
         super(props);
-
-        this.state={
-            category:[],
-            loading: false
-        };
     }
 
-    componentDidMount(){
-
-    }
-
-    async componentWillMount()
+    componentDidMount()
     {
-        console.log(this.state);
-        this.setState({loading: true});
-
-        await this.getMenuDtl().then((data)=>{
-            //alert(data);
-            this.setState({
-                category: data,
-                loading: false
-            });
-        });
+        //debugger
+        this.props.onCategoryAction();
     }
 
-    async getMenuDtl()
+    shouldComponentUpdate(nextProps,nextState)
     {
-        var promise= await new Promise((resolve,reject)=>{
-            axios.get('http:/localhost:3000/category').then((response)=>{
-                /* alert(response.data);*/
-                resolve(response.data);
-            }).catch((err)=>{
-                alert('In catch block: ' + err)
-                reject();
-            });
-        });
-        return promise;
-
+        //debugger
+        console.log(nextProps)
+        return true;
     }
 
-    renderCategory()
-    {
-        //return null;
-        //alert(this.state.category);
-
-        //return this.state.category.map(cat=><MenuComp name={cat.category_name}/>);
-    }
 
     render()
     {
-        if(this.state.loading)
-        {
-            return <ActivityIndicator size={'small'}/>
-        }
-
+        //debugger
         return(
-            <View>
-                <Card>
+            <ScrollView style={style.viewStyle}>
+                <Card style={style.cardStyle}>
                     {
-                        this.state.category.map((data)=>{
-                                return <CardSection>
-                                    <Text>{data.category_name}</Text>
-                                </CardSection>
+                        this.props.category.map((data,key)=>{
+                                return <TouchableOpacity onPress={()=>this.props.navigation.navigate('SubMenu',{data})} key={key}>
+                                    <CardSection style={style.cardSectionStyle} >
+                                        <ImageBackground source={{uri:data.image}} style={style.categoryImageStyle}>
+                                            <View style={style.textViewStyle}>
+                                                <Text style={style.textStyle}>{data.category_name}</Text>
+                                            </View>
+                                        </ImageBackground>
+                                    </CardSection>
+                                </TouchableOpacity>
                             }
                         )
                     }
                 </Card>
-            </View>
+            </ScrollView>
         );
     }
 }
 
-export default Menu;
+const mapStateToProps=state=>{
+    //debugger
+    console.log("MapStateToProps");
+    console.log(state);
+    return{
+        category:state.Category.category
+    }
+}
+
+const mapDispatchToProps=(dispatch)=>{
+    //debugger
+    return{
+        onCategoryAction:()=>{
+            dispatch(CategoryAction());
+        }
+    }
+}
+//debugger
+export default connect(mapStateToProps,mapDispatchToProps)(Menu);
+//export default Menu
+
+const style={
+    viewStyle:{
+        height:'100%',
+        backgroundColor: '#fff8dc'
+    },
+    cardStyle:{
+        flex:1,
+        shadowColor: '#8B4513',
+        shadowOffset:{width: 0,height: 2},
+        shadowOpacity: 0.7,
+        backgroundColor: 'transparent'
+    },
+    cardSectionStyle:{
+        margin: 5,
+        height: 200
+    },
+    categoryImageStyle:{
+        flex:1,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent:'flex-end'
+    },
+    textViewStyle:{
+            shadowColor: '#8B4513',
+            shadowOffset:{width: 0,height: 2},
+            shadowOpacity: 0.7,
+            opacity: 0.7,
+            width: '100%',
+            backgroundColor: '#fff8dc',
+            alignItems: 'center'
+    },
+    textStyle:{
+        //color: '#fff',
+        fontWeight:'700',
+        fontSize: 30
+    }
+}
+//http://www.exmaple.com/googleAuth
+//194405
+//Client-ID: 290492513443-a4kco5jkovtr8o6es8v0couvn3hc0hqn.apps.googleusercontent.com
+//Client-secret:  YGi67WoaxP2ItM3hchnj4JeQ

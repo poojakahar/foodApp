@@ -5,6 +5,9 @@ import CardSection from "../CardSection";
 import Button from "../Button";
 import Input from "../Input";
 import styles from './../../styles/styles';
+import {connect,bindActionCreators} from 'react-redux'
+import {UserSignUp} from '../../Actions/UserAction'
+import {NavigationActions} from 'react-navigation'
 
 class loginComp extends Component{
     static navigationOptions={
@@ -22,54 +25,58 @@ class loginComp extends Component{
 
     onButtonPress()
     {
-        fetch('http://localhost:3000/signUp',{
-            method: 'POST',
-            headers:{
-                'Accept':'application/json',
-                'Content-Type':'application/json'
-            },
-            body: JSON.stringify({
-                username: this.state.username,
-                password: this.state.password
-            })
-        }).then((response)=>response.json()).then((responseJson)=>{
-            var res = JSON.stringify(responseJson);
-            var orgres=JSON.stringify('1');
-            if(res==orgres){
-                //alert('Sucessf');
-                const { navigate }=this.props.navigation;
-                //navigate('Main');
-                this.props.navigation.goBack();
-            }
-            else
-            {
-                alert('Plz enter correct credential');
-            }
-
-        }).catch((err)=>{
-            alert('Catch: ' + err);
+        this.props.UserSignUp({
+            username:this.state.username,
+            password:this.state.password
         });
+        //debugger
+        //console.log(this.props.status)
+
+    }
+
+    componentWillReceiveProps(nextProps)
+    {
+        console.log("CompoentWillReceive Props")
+        console.log(nextProps.status)
+        var res=nextProps.status
+        if(res==200)
+        {
+            //alert('Sucess')
+            //this.props.navigation.navigate('Main')
+            this.props.navigation.dispatch(NavigationActions.reset({
+                index:0,
+                actions:[
+                    NavigationActions.navigate({
+                        routeName: 'Main'
+                    })
+                ]
+            }))
+        }
+        else
+        {
+            alert('Fail')
+        }
     }
 
     render(){
         return(
             <View>
                 <ImageBackground source={require('./../../images/back1.jpg')} style={styles.imageBackStyle}>
-                    <Card style={styles.cardStyle}>
+                    <Card style={styles.loginCardStyle}>
                         <CardSection>
-                            <Text style={styles.titleStyle}> Sign Up </Text>
+                            <Text style={styles.loginTitleStyle}> Sign Up </Text>
                         </CardSection>
 
-                        <CardSection style={styles.cardSectionStyle}>
-                            <Input placeholder='Username' title='Username' onChangeText={username=>this.setState({username})} value={this.state.username} textInputStyle={styles.textInputStyle} textInputContainerStyle={styles.textInputContainerStyle} inputTitleStyle={styles.inputTitleStyle}/>
+                        <CardSection style={styles.loginCardSectionStyle}>
+                            <Input placeholder='Username' title='Username' onChangeText={username=>this.setState({username})} value={this.state.username} textInputStyle={styles.loginTextInputStyle} textInputContainerStyle={styles.loginTextInputContainerStyle} inputTitleStyle={styles.loginInputTitleStyle}/>
                         </CardSection>
 
-                        <CardSection style={styles.cardSectionStyle}>
-                            <Input placeholder='Password' title='Password' onChangeText={password=>this.setState({password})} value={this.state.password} textInputStyle={styles.textInputStyle} textInputContainerStyle={styles.textInputContainerStyle} inputTitleStyle={styles.inputTitleStyle} secureTextEntry/>
+                        <CardSection style={styles.loginCardSectionStyle}>
+                            <Input placeholder='Password' title='Password' onChangeText={password=>this.setState({password})} value={this.state.password} textInputStyle={styles.loginTextInputStyle} textInputContainerStyle={styles.loginTextInputContainerStyle} inputTitleStyle={styles.loginInputTitleStyle} secureTextEntry/>
                         </CardSection>
 
-                        <CardSection style={styles.cardSectionStyle}>
-                            <Button title={'Sign Up'} onPress={this.onButtonPress.bind(this)} buttonContainerStyle={styles.buttonContainerStyle} buttonStyle={styles.buttonStyle}/>
+                        <CardSection style={styles.loginCardSectionStyle}>
+                            <Button title={'Sign Up'} onPress={this.onButtonPress.bind(this)} buttonContainerStyle={styles.loginButtonContainerStyle} buttonStyle={styles.loginButtonStyle}/>
                         </CardSection>
                     </Card>
                 </ImageBackground>
@@ -78,94 +85,27 @@ class loginComp extends Component{
     }
 }
 
-/*const styles={
-    imageBackStyle:{
-        height:'100%',
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignSelf: 'stretch'
-    },
-
-    cardStyle:{
-        borderRadius: 20,
-        shadowColor: '#8B4513',
-        shadowOffset:{width: 0,height: 2},
-        shadowOpacity: 0.7,
-        paddingTop: 10,
-        paddingBottom: 10,
-        margin: 5,
-        width: '80%',
-        opacity: 0.7,
-        backgroundColor: '#fff8dc'
-    },
-
-    cardSectionStyle:{
-        padding: 10
-    },
-
-    buttonContainerStyle:{
-        borderColor: '#8B4513',
-        borderWidth: 2,
-        borderRadius: 10,
-        elevation: 1,
-        marginTop: 10,
-    },
-
-    buttonStyle:{
-        color: '#8B4513',
-        fontSize: 18,
-        fontWeight: '900',
-        alignSelf: 'center',
-        marginTop: 5,
-        marginBottom: 5
-    },
-
-    titleStyle:{
-        fontSize: 30,
-        fontWeight: '700',
-        alignSelf: 'center',
-        color: '#8B4513'
-    },
-
-    textInputStyle:{
-        fontSize: 18,
-        color: '#8B4513',
-        paddingRight: 5,
-        paddingLeft: 5,
-        marginTop: 5,
-        marginBottom: 5,
-        borderBottomColor: '#8B4513',
-        borderBottomWidth: 2,
-        width: '60%',
-        height: '90%'
-    },
-
-    textInputContainerStyle:{
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        height: 50,
-        flexDirection: 'row'
-        //justifyContent:'flex-start'
-    },
-
-    inputTitleStyle:{
-        fontSize: 18,
-        fontWeight: '700',
-        color: '#8B4513',
-        paddingRight: 5,
-        paddingLeft: 5,
-        marginTop: 5,
-        marginBottom: 5
-    },
-
-    loginContianerStyle:{
-        justifyContent:'space-around',
-        flexDirection: 'row'
-    },
-
-    loginImageStyle:{
-        height: '30%'
+const mapStateToProps=state=>{
+    //debugger
+    console.log("MapStateToProps");
+    console.log(state);
+    return{
+        userdata:state.User.userdata,
+        status:state.User.status
     }
-};*/
+}
 
-export default loginComp;
+const mapDispatchToProps=(dispatch)=>{
+    //debugger
+    /*return{
+        onUserAction:(data)=>{
+            dispatch(UserAction(data));
+        }
+    }*/
+
+    return bindActionCreators(UserAction,dispatch)
+}
+
+export default connect(mapStateToProps,{
+    UserSignUp
+})(loginComp);

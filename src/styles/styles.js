@@ -1,73 +1,120 @@
 import {StyleSheet} from 'react-native';
+import {responsiveHeight, responsiveWidth, responsiveFontSize} from 'react-native-responsive-dimensions';
+
+var darkColor='#8B4513';
+var lightColor='#fff8dc';
+var labelFontSize=responsiveHeight(3);
+var InputFontSize=responsiveHeight(2.8);
 
 const styles= StyleSheet.create({
+
+    //loginComp
     imageBackStyle:{
-        height:'100%',
+        height:responsiveHeight(100),
+        width:responsiveWidth(100),
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'stretch'
     },
 
-    cardStyle:{
+    loginCardStyle:{
         borderRadius: 20,
-        shadowColor: '#8B4513',
+        shadowColor: darkColor,
         shadowOffset:{width: 0,height: 2},
         shadowOpacity: 0.7,
         paddingTop: 10,
         paddingBottom: 10,
         margin: 5,
-        width: '80%',
+        width: responsiveWidth(80),
+        //height:responsiveHeight(50),
         opacity: 0.7,
-        backgroundColor: '#fff8dc'
+        backgroundColor: lightColor,
+        //borderWidth: 1
     },
 
-    cardSectionStyle:{
-        padding: 10
+    loginTitleStyle:{
+        fontSize: responsiveFontSize(4),
+        fontWeight: '700',
+        alignSelf: 'center',
+        color: darkColor
     },
 
-    buttonContainerStyle:{
-        borderColor: '#8B4513',
+    loginCardSectionStyle:{
+        padding: 5,
+        //borderWidth: 3
+    },
+
+    loginSignUpCardSection:{
+        padding: 5,
+        alignItems: 'center',
+        width: responsiveWidth(50),
+        alignSelf:'center'
+    },
+
+    loginTextInputContainerStyle:{
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        height: responsiveHeight(10),
+        flexDirection: 'row'
+        //justifyContent:'flex-start'
+    },
+
+    loginTextInputStyle:{
+        fontSize: InputFontSize,
+        color: darkColor,
+        margin:5,
+        borderBottomColor: darkColor,
+        borderBottomWidth: 2,
+        width: responsiveWidth(45)
+    },
+
+    loginInputTitleStyle:{
+        fontSize: labelFontSize,
+        fontWeight: '700',
+        color: darkColor,
+        paddingRight: 5,
+        paddingLeft: 5,
+        marginTop: 5,
+        marginBottom: 5
+    },
+
+    loginButtonContainerStyle:{
+        borderColor: darkColor,
         borderWidth: 2,
         borderRadius: 10,
-        elevation: 1,
-        marginTop: 10,
+        elevation: 1
     },
 
-    buttonStyle:{
-        color: '#8B4513',
-        fontSize: 18,
+    loginSignUpContainerStyle:{
+        borderBottomColor:darkColor,
+        borderBottomWidth: 2
+    },
+
+    loginButtonStyle:{
+        color: darkColor,
+        fontSize: labelFontSize,
         fontWeight: '900',
         alignSelf: 'center',
         marginTop: 5,
         marginBottom: 5
     },
 
+    loginOptContainerStyle:{
+        justifyContent:'space-around',
+        flexDirection: 'row'
+    },
+
+    loginOptImgStyle:{
+        width: responsiveWidth(7),
+        height: responsiveHeight(7)
+    },
+//--------------------------------------------------------
+
     titleStyle:{
         fontSize: 30,
         fontWeight: '700',
         alignSelf: 'center',
         color: '#8B4513'
-    },
-
-    textInputStyle:{
-        fontSize: 18,
-        color: '#8B4513',
-        paddingRight: 5,
-        paddingLeft: 5,
-        marginTop: 5,
-        marginBottom: 5,
-        borderBottomColor: '#8B4513',
-        borderBottomWidth: 2,
-        width: '60%',
-        height: '90%'
-    },
-
-    textInputContainerStyle:{
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        height: 50,
-        flexDirection: 'row'
-        //justifyContent:'flex-start'
     },
 
     inputTitleStyle:{
@@ -80,26 +127,11 @@ const styles= StyleSheet.create({
         marginBottom: 5
     },
 
-    loginContainerStyle:{
-        justifyContent:'space-around',
-        flexDirection: 'row'
-    },
-
     loginImageStyle:{
         height: '30%'
     },
 
-    signUpCardSection:{
-        padding: 10,
-        alignItems: 'center',
-        width: '50%',
-        alignSelf:'center'
-    },
 
-    signUpContainerStyle:{
-        borderBottomColor:'#8B4513',
-        borderBottomWidth: 2
-    },
 
     menuButtonStyle:{
         padding: 5,
@@ -107,6 +139,21 @@ const styles= StyleSheet.create({
         borderRadius: 3,
         borderColor: '#8B4513'
 
+    },
+
+    cartViewStyle:{
+        padding: 5,
+        borderWidth: 2,
+        borderRadius: 50,
+        borderColor: '#8B4513',
+        width:35,
+        alignItems:'center'
+    },
+
+    cartTextStyle:{
+        color:'#8B4513',
+        fontSize: 15,
+        fontWeight: '700'
     }
 });
 
