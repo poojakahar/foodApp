@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { View,Text,Alert, ScrollView,Image,TouchableOpacity } from 'react-native';
+import { View,Text,Alert, ScrollView,Image,TouchableOpacity} from 'react-native';
 
 import Header from './Header';
 import Card from './Card';
@@ -29,13 +29,17 @@ class MainComp extends Component
 
                     <Card style={styles.ImageCardStyle}>
                         <CardSection style={styles.ImageCardSectionStyle}>
-                            <Image source={require('./../images/menu.jpg')} style={styles.imageStyle}/>
-                            <Text style={styles.imageContentStyle}> Menu </Text>
+                            <TouchableOpacity onPress={()=>{navigate('Menu')}}>
+                                <Image source={require('./../images/menu.jpg')} style={styles.imageStyle}/>
+                                <Text style={styles.imageContentStyle}> Menu </Text>
+                            </TouchableOpacity>
                         </CardSection>
 
                         <CardSection style={styles.ImageCardSectionStyle}>
-                            <Image source={require('./../images/cart.jpg')} style={styles.imageStyle}/>
-                            <Text style={styles.imageContentStyle}> Cart </Text>
+                            <TouchableOpacity onPress={()=>{navigate('Cart')}}>
+                                <Image source={require('./../images/cart.jpg')} style={styles.imageStyle}/>
+                                <Text style={styles.imageContentStyle}> Cart </Text>
+                            </TouchableOpacity>
                         </CardSection>
 
                         <CardSection style={styles.ImageCardSectionStyle}>
@@ -53,9 +57,9 @@ class MainComp extends Component
                         </CardSection>
 
                         <CardSection style={styles.ImageCardSectionStyle}>
-                            <TouchableOpacity onPress={()=>{navigate('Menu')}}>
+                            <TouchableOpacity>
                                 <Image source={require('./../images/menu.jpg')} style={styles.imageStyle}/>
-                                <Text style={styles.imageContentStyle}> News </Text>
+                                <Text style={styles.imageContentStyle}> Your Orders </Text>
                             </TouchableOpacity>
                         </CardSection>
 

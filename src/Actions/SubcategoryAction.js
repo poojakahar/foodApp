@@ -5,8 +5,8 @@ import API from '../APIs/API'
 var SubcategoryAction=(props)=>{
     var url=APIConst.BASE_URL+APIConst.subcategory+"?id="+props;
 
-    console.log("Subcategory Action")
-    console.log(props)
+    //console.log("Subcategory Action")
+    //console.log(props)
 
     return(dispatch,getState)=>{
         return API(url,'get',{},{}).then((response)=>{

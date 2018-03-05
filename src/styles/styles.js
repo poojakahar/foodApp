@@ -108,6 +108,119 @@ const styles= StyleSheet.create({
         width: responsiveWidth(7),
         height: responsiveHeight(7)
     },
+
+    //cart Style
+    cartMainView:{
+        flex:1,
+        backgroundColor:lightColor,
+    },
+
+    cartScrollViewStyle:{
+      height:responsiveHeight(75)
+    },
+
+    cartOrderButtonContainer:{
+        margin:10,
+        alignSelf:'center',
+        borderRadius:10,
+        width:responsiveWidth(30),
+        shadowColor:darkColor,
+        shadowOpacity:0.4,
+        shadowOffset:{width:4,height:2}
+    },
+    cartView:{
+        flex:1,
+        alignItems:'center',
+        justifyContent:'center'
+    },
+
+    cartCardStyle:{
+        width:responsiveWidth(95),
+        margin:5,
+        elevation:20,
+        shadowOpacity:0.3,
+        shadowOffset:{height:0,width:2},
+        shadowColor:darkColor,
+        flexDirection:'row',
+        justifyContent:'flex-start'
+    },
+
+    cartCardSectionStyle:{
+        margin:5,
+        //borderColor:'#ff3344',
+        //borderWidth:1,
+        width:responsiveWidth(29)
+    },
+
+    cartDataStyle:{
+        fontSize:responsiveFontSize(2),
+        fontWeight:'700',
+        color:darkColor,
+        margin:5
+    },
+
+    cartRemoveButtonStyle:{
+        justifyContent:'center',
+        alignItems:'center',
+        alignSelf:'center',
+        width:responsiveWidth(30),
+    },
+
+    cartImageStyle:{
+      height:100,
+      width:responsiveWidth(29)
+    },
+
+    cartImageButtonStyle:{
+        height:responsiveHeight(5),
+        width:responsiveWidth(12)
+    },
+
+    numericUpDownMainViewStyle:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        alignItems:'center',
+        margin:5,
+        borderWidth:2,
+        padding:0.5,
+        width:50,
+        borderColor:darkColor
+    },
+
+    numericUpDownImageMainViewStyle:{
+        alignSelf:'flex-end'
+    },
+
+    numericUpDownImageContainerStyle:{
+        borderLeftWidth:2,
+        borderColor:darkColor
+    },
+
+    numericUpDownUpImageContainerStyle:{
+        borderBottomWidth:1,
+        paddingBottom:1
+    },
+
+    numericUpDownDownImageContainerStyle:{
+        borderTopWidth:1,
+        paddingTop:1
+    },
+
+    numericUpdownImageStyle:{
+        height:9,
+        width:10
+    },
+
+    checkboxMainView:{
+      borderColor:darkColor,
+        borderWidth:2,
+        padding:2
+    },
+
+    chkechboxImageStyle:{
+        height:responsiveHeight(1.5),
+        width:responsiveWidth(2.5)
+    },
 //--------------------------------------------------------
 
     titleStyle:{

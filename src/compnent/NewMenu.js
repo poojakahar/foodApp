@@ -1,15 +1,15 @@
 import React , {Component} from 'react';
-import {ScrollView,Text,View,Alert,ActivityIndicator,TouchableOpacity,Image,ImageBackground,TouchableHighlight} from 'react-native';
-import axios from 'axios';
+import {ScrollView,Text,View,Alert,ActivityIndicator,TouchableOpacity,Image,ImageBackground,TouchableHighlight,AsyncStorage} from 'react-native';
 import Card from "./Card";
 import CardSection from "./CardSection";
-import MenuComp from './MenuComp'
 import styles from './../styles/styles'
 import CategoryAction from '../Actions/CategoryAction'
 import {connect} from 'react-redux'
 
+var cartItem=[];
 class Menu extends Component
 {
+
     static navigationOptions=({navigation})=>({
         title: 'Menu',
         headerLeft: <View style={styles.menuButtonStyle}>
@@ -21,12 +21,15 @@ class Menu extends Component
 
     constructor(props)
     {
+        //debugger
         super(props);
     }
 
     componentDidMount()
     {
         //debugger
+
+        this.getCartItem();
         this.props.onCategoryAction();
     }
 
@@ -37,6 +40,49 @@ class Menu extends Component
         return true;
     }
 
+    getCartItem()
+    {
+        AsyncStorage.getItem('cartItem').then((response)=>{
+            if(response)
+            {
+                cartItem=JSON.parse(response)
+                console.log(response)
+            }
+        },(err)=>{
+            alert('In cart cnt: ' + err)
+        }).catch((err)=>{
+            alert('In cart catch cnt: ' + err)
+        })
+
+        /*debugger
+        var c=new CarItem();
+        cartItem=c.getCartItem();
+        debugger
+        console.log(cartItem);*/
+    }
+
+    onBack = () => {
+        this.getCartItem();
+    };
+
+    renderMenu()
+    {
+        return(
+            this.props.category.map((data,key)=>{
+                    return <TouchableOpacity onPress={()=>this.props.navigation.navigate('SubMenu',{data,cart:cartItem.length, onBack: this.onBack})} key={key}>
+                        <CardSection style={style.cardSectionStyle} >
+                            <ImageBackground source={{uri:data.image}} style={style.categoryImageStyle}>
+                                <View style={style.textViewStyle}>
+                                    <Text style={style.textStyle}>{data.category_name}</Text>
+                                </View>
+                            </ImageBackground>
+                        </CardSection>
+                    </TouchableOpacity>
+                }
+            )
+        )
+
+    }
 
     render()
     {
@@ -45,22 +91,16 @@ class Menu extends Component
             <ScrollView style={style.viewStyle}>
                 <Card style={style.cardStyle}>
                     {
-                        this.props.category.map((data,key)=>{
-                                return <TouchableOpacity onPress={()=>this.props.navigation.navigate('SubMenu',{data})} key={key}>
-                                    <CardSection style={style.cardSectionStyle} >
-                                        <ImageBackground source={{uri:data.image}} style={style.categoryImageStyle}>
-                                            <View style={style.textViewStyle}>
-                                                <Text style={style.textStyle}>{data.category_name}</Text>
-                                            </View>
-                                        </ImageBackground>
-                                    </CardSection>
-                                </TouchableOpacity>
-                            }
-                        )
+                        this.renderMenu()
                     }
                 </Card>
             </ScrollView>
         );
+    }
+
+    componentWillUnmount()
+    {
+        //debugger
     }
 }
 

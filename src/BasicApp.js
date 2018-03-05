@@ -1,18 +1,23 @@
 import React from 'react';
+import {StackNavigator, DrawerNavigator} from 'react-navigation';
+
 import loginComp from './compnent/LoginComp/loginComp';
 import signUpComp from './compnent/LoginComp/signUpComp';
 import logout from './compnent/LoginComp/logout';
 import MainComp from './compnent/MainComp';
 import Gallery from './compnent/Gallery';
 import Menu from './compnent/NewMenu';
-import {StackNavigator, DrawerNavigator} from 'react-navigation';
+import Cart from './compnent/Cart';
 import SubMenu from "./compnent/SubMenu";
+import wishList from './compnent/wishList';
 import {responsiveHeight, responsiveWidth, responsiveFontSize} from 'react-native-responsive-dimensions';
 
 var HomeScreenRouter = DrawerNavigator({
     Home: {screen: MainComp},
     Menu: {screen:Menu},
     Gallery: {screen: Gallery},
+    Cart:{screen:Cart},
+    'Wish List':{screen:wishList},
     Logout:{screen: logout}
 });
 
@@ -20,7 +25,7 @@ const BasicApp = StackNavigator({
     Main: {screen: loginComp},
     SignUp: {screen: signUpComp},
     Home: {screen: HomeScreenRouter},
-    SubMenu:{screen:SubMenu}
+    SubMenu:{screen:SubMenu},
 },{
     navigationOptions:{
         headerStyle:{

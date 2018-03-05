@@ -7,31 +7,89 @@ import Button from "./Button";
 import {connect} from "react-redux"
 import SubcategoryAction from '../Actions/SubcategoryAction'
 
+var cartItem=[];
 class SubMenu extends Component
 {
-    static navigationOptions=({navigation})=>({
-        title: navigation.state.params.data.category_name,
-        headerRight: <View style={styles.cartViewStyle}>
-                        <Text style={styles.cartTextStyle}>{navigation.state.params.cart?navigation.state.params.cart:0}</Text>
-                    </View>
-    })
+    static navigationOptions=({navigation})=> {
+        const cart = navigation.state.params.cart ? navigation.state.params.cart : 0;
+        alert(cart);
+        return ({
+            title: navigation.state.params.data.category_name,
+            headerRight: <View style={styles.cartViewStyle}>
+                            <Text style={styles.cartTextStyle}>{cart}</Text>
+                        </View>
+        })
+    }
 
     constructor(props)
     {
         super(props);
-
+        //AsyncStorage.clear()
     }
 
     componentDidMount()
     {
-        console.log("In Subcategory componenetDidMount")
-        console.log(this.props.navigation.state.params.data);
+        //console.log("In Subcategory componenetDidMount")
+        //console.log(this.props.navigation.state.params.data);
         this.props.onSubcategoryAction(this.props.navigation.state.params.data._id);
+    }
+
+    componentWillUnmount()
+    {
+        this.props.navigation.state.params.onBack();
     }
 
     shouldComponentUpdate(nextProps,nextState)
     {
             return true
+    }
+
+    addToCartItem(data)
+    {
+        //debugger
+
+        AsyncStorage.getItem('cartItem').then((response)=>{
+            //debugger
+            if(response)
+            {
+                cartItem=JSON.parse(response)
+                //debugger
+                console.log(response)
+                //debugger
+            }
+
+            cartItem.push(data);
+            this.props.navigation.setParams({cart:cartItem.length})
+
+            //debugger
+
+            AsyncStorage.setItem('cartItem',JSON.stringify(cartItem))
+        },(err)=>{
+            alert('In cart cnt: ' + err)
+        }).catch((err)=>{
+            alert('In cart catch cnt: ' + err)
+        })
+    }
+
+    renderSubmenu()
+    {
+        return(
+            this.props.subcategory.map((data,key)=>{
+                    return <CardSection style={style.cardSectionStyle} key={key}>
+                        <ImageBackground source={{uri:data.image}} style={style.categoryImageStyle}>
+                            <View style={style.textViewStyle}>
+                                <Text style={style.textStyle}>{data.subcategory_name}</Text>
+                            </View>
+                        </ImageBackground>
+
+                        <View style={[style.textViewStyle,style.priceViewStyle]}>
+                            <Text style={style.textStyle}>{'Rs. '+ data.price}</Text>
+                            <Button title='Add to Cart' onPress={this.addToCartItem.bind(this,data)} buttonStyle={[style.textStyle,style.cartButtonStyle]}/>
+                        </View>
+                    </CardSection>
+                }
+            )
+        )
     }
 
     render()
@@ -40,22 +98,7 @@ class SubMenu extends Component
             <ScrollView style={style.viewStyle}>
                 <Card style={style.cardStyle}>
                     {
-                        this.props.subcategory.map((data,key)=>{
-                                return <CardSection style={style.cardSectionStyle} key={key}>
-                                        <ImageBackground source={{uri:data.image}} style={style.categoryImageStyle}>
-                                            <View style={style.textViewStyle}>
-                                                <Text style={style.textStyle}>{data.subcategory_name}</Text>
-                                            </View>
-                                        </ImageBackground>
-
-                                    <View style={[style.textViewStyle,style.priceViewStyle]}>
-                                        <Text style={style.textStyle}>{'Rs. '+ data.price}</Text>
-                                        {/*<Text>{'Cart::: '+this.props.navigation.state.params.cart}</Text>*/}
-                                        <Button title='Add to Cart' onPress={()=>this.getCartItem.bind(this,data)} buttonStyle={[style.textStyle,style.cartButtonStyle]}/>
-                                    </View>
-                                    </CardSection>
-                            }
-                        )
+                        this.renderSubmenu()
                     }
                 </Card>
             </ScrollView>
